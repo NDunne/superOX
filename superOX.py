@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 import math
 import time
 
@@ -34,7 +34,7 @@ def boardWinner(winner,n,button):
         button[(n) % 3][int(math.floor(n)/3)][1][0].configure(text = "-", bg = ("gray"),relief = "groove")
         button[(n) % 3][int(math.floor(n)/3)][1][2].configure(text = "-", bg = ("gray"),relief = "groove")
         button[(n) % 3][int(math.floor(n)/3)][2][1].configure(text = "-", bg = ("gray"),relief = "groove")
-    #create O shape on won board    
+    #create O shape on won board
     else:
         lastMove=EMPTY
         boardWinners[int(math.floor(n)/3)][(n) % 3] = O
@@ -48,7 +48,7 @@ def boardWinner(winner,n,button):
         button[(n) % 3][int(math.floor(n)/3)][1][0].configure(text = O, bg = ("#6599FF"),relief = "groove")
         button[(n) % 3][int(math.floor(n)/3)][1][2].configure(text = O, bg = ("#6599FF"),relief = "groove")
         button[(n) % 3][int(math.floor(n)/3)][2][1].configure(text = O, bg = ("#6599FF"),relief = "groove")
-        
+
 
 def winner(button):
     #checks each board for a winner
@@ -66,7 +66,7 @@ def winner(button):
         board = []
         for x in range(3):
             for y in range(3):
-                board.append(button[xCo][yCo][x][y].cget("text"))       
+                board.append(button[xCo][yCo][x][y].cget("text"))
         for row in waysToWin:
             #if there is three in a row, win that board for the player
             if board[row[0]] == board[row[1]] == board[row[2]] == X:
@@ -82,7 +82,7 @@ def endGame(button):
                         button[i][j][x][y]["state"] = DISABLED
                         if button[i][j][x][y].cget("text") not in (X,O,"-"):
                             button[i][j][x][y].configure(bg = "gray")
-                                
+
 def winnerAll(player,boardWinners,button):
     #Check if there is 3 won boards in a row, using the 2D array boardWinners
     w = 0
@@ -109,7 +109,7 @@ def winnerAll(player,boardWinners,button):
                 infoWin.title("GAME WON")
                 endGame(button)
                 msg = Message(infoWin, text="Player " + player + " has WON!")
-                msg.configure(font = 20,fg = "green", bg = "black")   
+                msg.configure(font = 20,fg = "green", bg = "black")
                 msg.pack()
 
                 exitB = Button(infoWin, text="Dismiss",bg = "black", fg = "green", font = 16, command=infoWin.destroy)
@@ -119,13 +119,14 @@ def winnerAll(player,boardWinners,button):
 
 def move(i,j,x,y,button):
     #This function is triggered by clicking a button and inherits the button's co-ords on the board
+    global player
     if player == X:
         plaCol = "red"
     else:
         plaCol = "#6599FF"
     button[i][j][x][y].configure(text = player, relief = "sunken", bg = plaCol, state = DISABLED)
     winner(button)
-    
+
     if boardWinners[x][y] != "":
         #If forced board has already been won
         boardNumber = None
@@ -136,7 +137,6 @@ def move(i,j,x,y,button):
     global tableWinner
     tableWinner = winnerAll(player, boardWinners,button)
 
-    global player
     #change the turn every time a move is made
     if player == X:
         player = O
@@ -144,16 +144,16 @@ def move(i,j,x,y,button):
         player = X
     #update the UI
     tk.update()
-    
+
 def generateBoard():
     #Create 3x3 of frames
     frames = [[Frame(main_frame, width="20px", height=90, borderwidth =1) for i in range(3)] for i in range(3)]
     for x in range(3):
         for y in range(3):
             frames[x][y].grid(column = x, row = y+1, pady = 3)
-    
+
     button = [[[["" for i in range(3)]for i in range(3)]for i in range(3)]for i in range(3)]
-    #create 4D array of buttons. [1] = BoardX, [2] = BoardY, [3] = tileX, [4] = tileY 
+    #create 4D array of buttons. [1] = BoardX, [2] = BoardY, [3] = tileX, [4] = tileY
     for i in range(3):
         for j in range(3):
             for x in range(3):
@@ -179,7 +179,7 @@ board corresponding to the tile the X player played in.
 been won or drawn, they may choose anywhere for their next move.
 - Three X's or O's in a row on a board will win that board for the player
 - The game is won when a player wins three boards in a row.""")
-    msg.configure(font = 20,fg = "green", bg = "black")   
+    msg.configure(font = 20,fg = "green", bg = "black")
     msg.pack()
     #button to close info pop-up
     exitB = Button(infoWin, text="Dismiss",bg = "black", fg = "green", font = 16, command=infoWin.destroy)
@@ -197,12 +197,12 @@ def validMoves(boardNumber,button):
                         if  button[i][j][x][y].cget("text") not in (X,O,"-"):
                             button[i][j][x][y].configure(bg = "green")
                             button[i][j][x][y]["state"] = NORMAL
-                            
+
                         else:
                             button[i][j][x][y]["state"] = DISABLED
                             if button[i][j][x][y].cget("text") not in (X,O,"-"):
                                 button[i][j][x][y].configure(bg = "gray")
-                                
+
     else:
         xCo = (boardNumber-1) % 3
         yCo = int(math.floor(boardNumber-1)/3) #These two get X and Y co-ords from the board number(1-9)
@@ -237,7 +237,7 @@ def validMoves(boardNumber,button):
                         button[i][j][x][y]["state"] = DISABLED
                         if button[i][j][x][y].cget("text") not in (X,O,"-"):
                             button[i][j][x][y].configure(bg = "gray")
-        
+
 def main(boardNumber):
     #Call the other functions
     button = generateBoard() #Button is the array of buttons
@@ -245,7 +245,7 @@ def main(boardNumber):
     displayInfo() #Show the user how to play
     validMoves(boardNumber,button) #colour valid buttons. boardNumber = None here.
     tableWinner = None
-    
+
     while tableWinner == None:
         #update label at the top of the board
         label = Label(main_frame, font = 8, text="Current Player: " + player)
@@ -254,6 +254,6 @@ def main(boardNumber):
         tk.update()
         #Stop this Loop from running as fast as it can and tanking my computer
         time.sleep(0.1)
-        
+
 main(boardNumber)
 
